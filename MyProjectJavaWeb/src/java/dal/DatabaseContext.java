@@ -9,18 +9,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServlet;
 
 /**
  *
  * @author q
  */
-public class DatabaseContext {
+public class DatabaseContext extends HttpServlet {
 
     public Connection connection;
 
@@ -77,12 +81,49 @@ public class DatabaseContext {
 
     }
 
+    public void getClothing() {
+        try {
+            Statement st1 = connection.createStatement();
+            String sql = "SELECT [clothingID]"
+                    + "      ,[clothingName]"
+                    + "      ,[styleID]"
+                    + "      ,[sizeID]"
+                    + "      ,[colorID]"
+                    + "      ,[materialID]"
+                    + "      ,[image]"
+                    + "  FROM [dbo].[clothingTBL]";
+            ResultSet rs1 = st1.executeQuery(sql);
+            String imgLen = "";
+            if (rs1.next()) {
+                imgLen = rs1.getString("image");
+            }
+            rs1 = st1.executeQuery(sql);
+
+            if (rs1.next()) {
+                int len = imgLen.length();
+                byte[] rb = new byte[len];
+
+                /* retrieving image in binery format*/
+                InputStream readImg = rs1.getBinaryStream("image");
+                int index = readImg.read(rb, 0, len);
+                System.out.println("index" + index);
+                st1.close();
+                System.out.println("ok");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseContext.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DatabaseContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 }
 
 class test {
 
     public static void main(String[] args) {
         DatabaseContext db = new DatabaseContext();
-        db.insert();
+        db.getClothing();
     }
 }

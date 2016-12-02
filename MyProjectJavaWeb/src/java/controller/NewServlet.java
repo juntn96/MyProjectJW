@@ -1,8 +1,13 @@
 
 package controller;
 
+import dal.DatabaseContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +59,53 @@ public class NewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+      
+        DatabaseContext db = new DatabaseContext();
+        Connection connection =  db.connection;
+         try{
+        /*
+        Database connection, database id is root and password is blank
+        */
+        Statement st1=connection.createStatement();
+        /*
+        select the image from the picture table    .
+        */
+         String sql = "SELECT [clothingID]"
+                    + "      ,[clothingName]"
+                    + "      ,[styleID]"
+                    + "      ,[sizeID]"
+                    + "      ,[colorID]"
+                    + "      ,[materialID]"
+                    + "      ,[image]"
+                    + "  FROM [dbo].[clothingTBL]";
+        ResultSet rs1 = st1.executeQuery(sql);
+        String imgLen="";
+        if(rs1.next()){
+            imgLen = rs1.getString("image");
+        }
+        rs1 = st1.executeQuery(sql);
+
+        if(rs1.next()){
+            int len = imgLen.length();
+            byte [] rb = new byte[len];
+
+            /* retrieving image in binery format*/
+
+            InputStream readImg = rs1.getBinaryStream("image");
+            int index=readImg.read(rb, 0, len);
+
+            System.out.println("index"+index);
+            st1.close();
+
+            response.reset();
+            response.setContentType("image/jpg");
+            response.getOutputStream().write(rb,0,len);
+            response.getOutputStream().flush();
+        }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
     }
 
     /**
