@@ -13,7 +13,7 @@ public class Cloth {
 
     private int clothID;
     private String name;
-    private boolean geder;
+    private boolean gender;
     private String path;
     private int sizeID;
     private int styleID;
@@ -24,7 +24,7 @@ public class Cloth {
             int sizeID, int styleID, int colorID, int meterialID) {
         this.clothID = clothID;
         this.name = name;
-        this.geder = geder;
+        this.gender = geder;
         this.path = path;
         this.sizeID = sizeID;
         this.styleID = styleID;
@@ -52,11 +52,11 @@ public class Cloth {
     }
 
     public boolean isGeder() {
-        return geder;
+        return gender;
     }
 
     public void setGeder(boolean geder) {
-        this.geder = geder;
+        this.gender = geder;
     }
 
     public String getPath() {
@@ -97,6 +97,11 @@ public class Cloth {
 
     public void setMeterialID(int meterialID) {
         this.meterialID = meterialID;
+    }
+
+    @Override
+    public String toString() {
+        return name +" "+sizeID+" "+styleID+" "+colorID+" "+meterialID+" "+gender;
     }
 
     

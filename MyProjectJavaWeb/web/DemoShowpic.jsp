@@ -17,6 +17,6 @@
     <body>
         <% for (Cloth c : cloths) {%>
         <img src="<%= c.getPath()  %>" alt="Mountain View">
-        <%}%>
+        <%}%>   
     </body>
 </html>
