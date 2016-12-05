@@ -14,13 +14,14 @@ public class Cloth {
     private int clothID;
     private String name;
     private boolean gender;
+    private int price;
     private String path;
     private int sizeID;
     private int styleID;
     private int colorID;
     private int meterialID;
 
-    public Cloth(int clothID, String name, boolean geder, String path, 
+    public Cloth(int clothID, String name,int price, boolean geder, String path, 
             int sizeID, int styleID, int colorID, int meterialID) {
         this.clothID = clothID;
         this.name = name;
@@ -30,11 +31,28 @@ public class Cloth {
         this.styleID = styleID;
         this.colorID = colorID;
         this.meterialID = meterialID;
+        this.price = price;
     }
 
     public Cloth() {
     }
 
+    public boolean isGender() {
+        return gender;
+    }
+
+    public void setGender(boolean gender) {
+        this.gender = gender;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    
     public int getClothID() {
         return clothID;
     }
