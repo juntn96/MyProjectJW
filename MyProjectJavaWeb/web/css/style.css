@@ -399,7 +399,6 @@ xsigin/signup popup
   transition: opacity 0.2s 0, visibility 0 0.2s;
 }
 .cd-form .cd-error-message::after {
-  /* triangle */
   content: '';
   position: absolute;
   left: 22px;
