@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.*;
 
 /**
@@ -21,8 +23,6 @@ import model.*;
  */
 /// load image by href
 public class DatabaseContext {
-
-
 
     public Connection connection;
 
@@ -41,7 +41,6 @@ public class DatabaseContext {
         String sql = "SELECT "
                 + "[clothingID]"
                 + "      ,[name]"
-                + " ,price "
                 + "      ,[gender]"
                 + "      ,[path]"
                 + "      ,[sizeID]"
@@ -63,9 +62,8 @@ public class DatabaseContext {
                 int styleID = rs.getInt("styleID");
                 int colorID = rs.getInt("colorID");
                 int meterialID = rs.getInt("meterialID");
-                int price = rs.getInt("price");
                 //
-                Cloth c = new Cloth(clothID, name, price, geder, path, sizeID, styleID, colorID, meterialID);
+                Cloth c = new Cloth(clothID, name, geder, path, sizeID, styleID, colorID, meterialID);
                 list.add(c);
             }
         } catch (SQLException ex) {
@@ -73,17 +71,15 @@ public class DatabaseContext {
         return list;
 
     }
-
     // test ok : SearchByFilter
-    public ArrayList<Cloth> SearchByFilter(String name, Boolean gender,
-            Integer sizeID, Integer styleID, Integer colorID, Integer meterialID, Integer price) {
+    public ArrayList<Cloth> SearchByFilter(String name, Boolean gender, 
+            Integer sizeID, Integer styleID, Integer colorID, Integer meterialID) {
         ArrayList<Cloth> searchList = new ArrayList<>();
 
         String sql = "SELECT "
-                + " clothingID"
+                +" clothingID"
                 + "      ,[name]"
                 + "      ,[gender]"
-                + " ,price "
                 + "      ,[path]"
                 + "      ,[sizeID]"
                 + "      ,[styleID]"
@@ -109,14 +105,6 @@ public class DatabaseContext {
             params.put(paramIndex, value);
 
         }
-        if (price != null) {
-            paramIndex++;
-            sql += " AND price = ? ";
-            Object[] value = {"INT", price};
-            params.put(paramIndex, value);
-
-        }
-
         if (sizeID != null) {
             paramIndex++;
             sql += " AND sizeID = ? ";
@@ -149,17 +137,18 @@ public class DatabaseContext {
                 Integer key = entry.getKey();
                 Object[] value = entry.getValue();
 
-                if (value[0].equals("STRING")) {
+                if(value[0].equals("STRING")){
                     ps.setString(key, value[1].toString());
-                } else if (value[0].equals("INT")) {
+                }else if(value[0].equals("INT")){
                     ps.setInt(key, Integer.parseInt(value[1].toString()));
-                } else if (value[0].equals("BOOLEAN")) {
+                }
+                else if(value[0].equals("BOOLEAN")){
                     ps.setBoolean(key, Boolean.parseBoolean(value[1].toString()));
                 }
             }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int pclothID = rs.getInt("clothingID");
+                 int pclothID = rs.getInt("clothingID");
                 String pname = rs.getString("name");
                 boolean pgeder = rs.getBoolean("gender");
                 String ppath = rs.getString("path");
@@ -167,27 +156,27 @@ public class DatabaseContext {
                 int pstyleID = rs.getInt("styleID");
                 int pcolorID = rs.getInt("colorID");
                 int pmeterialID = rs.getInt("meterialID");
-                int pPrice =rs.getInt("price");
-                Cloth c = new Cloth(pclothID, pname, pPrice, pgeder, ppath, psizeID, pstyleID, pcolorID, pmeterialID);
+                Cloth c = new Cloth(pclothID, pname, pgeder, ppath, psizeID, pstyleID, pcolorID, pmeterialID);
                 searchList.add(c);
             }
         } catch (SQLException ex) {
         }
+
         return searchList;
+        
 
     }
 
+
 }
-
-class test {
-
+class test{
     public static void main(String[] args) {
         DatabaseContext db = new DatabaseContext();
-        ArrayList<Cloth> SearchByFilter = db.SearchByFilter(null, true, 2, 2, 4, 1, null);
+        ArrayList<Cloth> SearchByFilter = db.SearchByFilter(null, true,2, 2,4, 1);
         for (Cloth cloth : SearchByFilter) {
             System.out.println(cloth.toString());
-
+            
         }
-
+        
     }
 }
