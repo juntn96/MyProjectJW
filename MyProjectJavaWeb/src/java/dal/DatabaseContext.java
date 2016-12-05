@@ -22,6 +22,8 @@ import model.*;
 /// load image by href
 public class DatabaseContext {
 
+
+
     public Connection connection;
 
     public DatabaseContext() {
